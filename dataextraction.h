@@ -21,16 +21,15 @@ void CDataExtraction::addData()
 {
     CFunctions function;
     CVigenere vigenere;
-    std::string sInput;
-    std::string sWritter;
+    std::string sInput="";
+    std::string sWritter="";
 
     std::cout << "Filename: ";
     function.m_getline(sInput);
 
     string sPath = "data/";
     sPath.append(sInput);
-    ofstream write;
-    write.open(sPath);
+    ofstream write(sPath.c_str(),std::ios::out|std::ios::binary);
     sInput = "";
     
     std::cout << "Enter words: \n";
@@ -39,19 +38,22 @@ void CDataExtraction::addData()
         std::cout << i << ": ";
         function.m_getline(sInput);
         const char* chInput = sInput.c_str();
-        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("gawasi")));
-        sWritter.append("\n");
+        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI")));
+	sWritter.append("\n");
+	std::cout<<chInput<<std::endl;
     }
 
+    std::cout<<"Swritter: "<<sWritter<<std::endl;
     //sWritter.append("\n1.");
 
+    sInput="";
     std::cout << "Enter data: \n";
     for(int i=1; i<5; i++)
     {
         std::cout << i << ": ";
         function.m_getline(sInput);
         const char* chInput = sInput.c_str();
-        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("gawasi")));
+        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI")));
         sWritter.append("\n\n");
     }
 
@@ -71,8 +73,7 @@ void CDataExtraction::extractData()
 
     string sPath = "data/";
     sPath.append(sFromPerson);
-    ifstream read;
-    read.open(sPath);
+    ifstream read(sPath.c_str(),std::ios::in|std::ios::binary);
 
     if(!read)
     {

@@ -20,7 +20,7 @@ public:
 	bool compare(char *chText1, char *chText);
     bool compare(const char* chText1, const char* chText);
     bool contains(char* chText, char* chContains);
-	void clearMemory(char *chVar);
+	void clearMemory(char *chVar,unsigned int size);
 	char* createSpace(char *chText);
 	char* convertIntChar(int y, int x);
     int charToInt(char* chInput);
@@ -99,9 +99,9 @@ bool CFunctions::contains(char* chText, char* chContains)
 
 //Funktion: ClearMemory
 //Aufgabe: Einen String leeren
-void CFunctions::clearMemory(char* chT)
+void CFunctions::clearMemory(char* chT,unsigned int size)
 {
-	for (unsigned int i = 0; i<sizeof(chT); i++)
+	for (unsigned int i = 0; i<size; i++)
 		chT[i] = '\0';
 }
 

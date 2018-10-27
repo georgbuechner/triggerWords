@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include "CBase64.h"
 #include "CFunctions.h"
 
@@ -15,7 +15,7 @@ class CVigenere
         * @parameter char* chKey (given key for encryption) 
         * @parameter char* chEncryptedText (char array to fill with encrypted text)
         **/
-        const char* encryption(char* chText, char* chKey);
+	std::string encryption(char* chText, char* chKey);
 
         /**
         * encryption: encrypt a given text using vigere: move each character by number of 
@@ -44,13 +44,13 @@ class CVigenere
 * @parameter char* chKey (given key for encryption) 
 * @parameter char* chEncryptedText (char array to fill with encrypted text)
 **/
-const char* CVigenere::encryption(char* chText, char* chKey)
+std::string CVigenere::encryption(char* chText, char* chKey)
 {
     CFunctions function;
     char* chEncryptedText = new char[10000];
 
     //Clear memory of chEncryptedText
-    function.clearMemory(chEncryptedText);
+    function.clearMemory(chEncryptedText,10000);
 
     unsigned int j = 0; //counter for key
     unsigned int x = 0; //Counter for multible of 12...
@@ -59,28 +59,21 @@ const char* CVigenere::encryption(char* chText, char* chKey)
     for(unsigned int i=0; i<strlen(chText); i++)
     {
         //Counter for key
-        j=i;
-        if(j > strlen(chKey)-1)
-            j=0;
+        j=j%strlen(chKey);
 
         //Cast key and text to integer 
         int Key = static_cast<int>(chKey[j])-65;
         int Text = static_cast<int>(chText[i]);
 
         chEncryptedText[i-x] = static_cast<char>(Text+Key);    //Uncomplicated encryption
+	j++;
     }
 
     std::string sBase64 = base64_encode(reinterpret_cast<unsigned char const*>(chEncryptedText), strlen(chEncryptedText));
-    function.clearMemory(chEncryptedText);
-    function.allocate(chEncryptedText, const_cast<char*>(sBase64.c_str()));   
 
-    //Check that array does not contain nonsense character at the end
-    chEncryptedText[sBase64.length()] = '\0';
-
-    std::string sEncryptedText; 
-    sEncryptedText.append(chEncryptedText);
+    
     delete []chEncryptedText;
-    return sEncryptedText.c_str();
+    return sBase64;
 }
 
 
@@ -98,15 +91,14 @@ std::string CVigenere::decryption(char* chText, char* chKey)
     std::string sBase64 = chText;
     std::string sNoBase64 = base64_decode(sBase64);
     
-    char* chDecryptedText = new char;
-    function.clearMemory(chDecryptedText);
-    function.clearMemory(chText);
-    function.allocate(chText, const_cast<char*>(sNoBase64.c_str()));
+    char* chDecryptedText = new char[10000];
+    function.clearMemory(chDecryptedText,10000);
+//    function.allocate(chText, const_cast<char*>(sNoBase64.c_str()));
     
 
     unsigned int j = 0;
     //Loop over char arry implementing
-    for(unsigned int i=0; i<strlen(chText); i++)
+    for(unsigned int i=0; i<sNoBase64.length(); i++)
     {
         //Variables
 
@@ -117,7 +109,7 @@ std::string CVigenere::decryption(char* chText, char* chKey)
         
         //Cast key and text to integer
         int Key = static_cast<int>(chKey[j])-65;
-        int Text = static_cast<int>(chText[i]);
+        int Text = static_cast<int>(sNoBase64[i]);
 
         //Decrypting using vigenere
         chDecryptedText[i] = static_cast<char>(Text-Key);    //Uncomplicated decryption
@@ -125,10 +117,10 @@ std::string CVigenere::decryption(char* chText, char* chKey)
 
     cout << "Decryption succsesful.\n";
     //Check that array does not contain nonsense character at the end
-    chDecryptedText[strlen(chText)] = '\0';
+    chDecryptedText[sNoBase64.length()] = '\0';
 
     std::string sDecryptedText = chDecryptedText;
-    delete chDecryptedText;
+    delete []chDecryptedText;
     return sDecryptedText;
 }
 
