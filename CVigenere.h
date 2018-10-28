@@ -103,9 +103,8 @@ std::string CVigenere::decryption(char* chText, char* chKey)
         //Variables
 
         //Counter vor key
-        j=i;
-        if(j > strlen(chKey)-1)
-            j=0;
+        j=j%strlen(chKey);
+
         
         //Cast key and text to integer
         int Key = static_cast<int>(chKey[j])-65;
