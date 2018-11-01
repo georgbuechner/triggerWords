@@ -28,11 +28,13 @@ void CDataExtraction::addData()
     function.m_getline(sInput);
 
     ifstream read;
-    read.open(sInput);
+    std::string sPath = "clear/";
+    sPath.append(sInput);
+    read.open(sPath);
 
     std::cout << "Charactername: ";
     function.m_getline(sInput);
-    string sPath = "data/";
+    sPath = "data/";
     sPath.append(sInput);
     ofstream write(sPath.c_str(),std::ios::out|std::ios::binary);
     sInput = "";
@@ -65,7 +67,7 @@ void CDataExtraction::extractData()
     CVigenere vigenere;
     std::string sFromPerson;
 
-    std::cout << "Get data from: ";
+    std::cout << "Verdächtige Person (Name der verschlüsselten Datei): ";
     function.m_getline(sFromPerson);
 
     string sPath = "data/";
@@ -74,7 +76,7 @@ void CDataExtraction::extractData()
 
     if(!read)
     {
-        std::cout << "Selected person not found in data.\n";
+        std::cout << "Ausgewählte Person in unserem Datensatz nicht vorhanden.\n";
         return;
     }
 
@@ -112,7 +114,9 @@ void CDataExtraction::extractData()
             getline(read, sBuffer);
     }
                 
-    std::cout << "Enter information to extract data of person: \n";
+    std::cout << "Informationen zu der verdächtigten person eingeben \n";
+    std::cout << "(Dies können einzelne Wörter oder kurze Phrasen sein. \n";
+    std::cout << "10 Eingaben möglich): \n";
 
     std::list<std::string>* l_inputWords = new std::list<std::string>;
     std::string sInput;
@@ -126,21 +130,14 @@ void CDataExtraction::extractData()
     unsigned int counter=0;
     for(auto it=l_inputWords->begin(); it!=l_inputWords->end(); it++)
     {
-        std::cout << (*it) << "\n";
         for(auto yt=l_triggerWords->begin(); yt!=l_triggerWords->end(); yt++)
         {
-            std::cout << "-- " << (*yt);
             if(function.compare((*it).c_str(), (*yt).c_str()) == true)
-            {
-                std::cout << " *";
                 counter++;
-            }
-
-            std::cout << "\n";
         }
     }
 
-    std::cout << counter << " matches.\n";
+    std::cout << counter << " Übereinstimmungen.\n\n\n";
         
     unsigned int sndCounter = 0;
     for(auto it=l_inputs->begin(); it!=l_inputs->end(); it++)
