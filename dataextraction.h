@@ -24,45 +24,37 @@ void CDataExtraction::addData()
     std::string sInput="";
     std::string sWritter="";
 
-    std::cout << "Filename: ";
+    std::cout << "Path: ";
     function.m_getline(sInput);
 
+    ifstream read;
+    read.open(sInput);
+
+    std::cout << "Charactername: ";
+    function.m_getline(sInput);
     string sPath = "data/";
     sPath.append(sInput);
     ofstream write(sPath.c_str(),std::ios::out|std::ios::binary);
     sInput = "";
     
-    std::cout << "Enter words: \n";
-    for(int i=0; i<10; i++)
+
+    std::string sBuffer;
+    while(!read.eof())
     {
-        std::cout << i << ": ";
-        function.m_getline(sInput);
-        const char* chInput = sInput.c_str();
+        getline(read, sBuffer);
+        
+        if(sBuffer.compare("#") == true)
+            continue;
+    
+        const char* chBuffer = sBuffer.c_str();
         char* chEncrypt = new char[20000];
-        vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI"), chEncrypt);
-        sWritter.append(chEncrypt);
-        delete []chEncrypt;
-	    sWritter.append("\n");
+        vigenere.encryption(const_cast<char*>(chBuffer), const_cast<char*>("GAWASI"), chEncrypt);
+        
+        write << chEncrypt << "\n";
     }
 
-    //sWritter.append("\n1.");
+    std::cout << "writing finished...\n";
 
-    sInput="";
-    std::cout << "Enter data: \n";
-    for(int i=1; i<4; i++)
-    {
-        std::cout << i << ": ";
-        function.m_getline(sInput);
-        const char* chInput = sInput.c_str();
-        char* chEncrypt = new char[20000];
-        vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI"), chEncrypt);
-        sWritter.append("#\n");
-        sWritter.append(chEncrypt);
-        delete []chEncrypt;
-        sWritter.append("\n\n");
-    }
-
-    write << sWritter;
     write.close();
 }
 
@@ -102,10 +94,10 @@ void CDataExtraction::extractData()
     std::list<std::string>* l_inputs = new std::list<std::string>;
     while(!read.eof())
     {
-        if(sBuffer.find("#") != std::string::npos)
+        if(sBuffer.find("j") != std::string::npos)
         {
             std::string sNewInput;
-            while(sBuffer.find("#") != std::string::npos)
+            while(sBuffer.find("j") != std::string::npos)
             {
                 getline(read, sBuffer); 
                 const char* chBuffer = sBuffer.c_str();
