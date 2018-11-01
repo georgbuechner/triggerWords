@@ -49,7 +49,7 @@ void CDataExtraction::addData()
 
     sInput="";
     std::cout << "Enter data: \n";
-    for(int i=1; i<5; i++)
+    for(int i=1; i<4; i++)
     {
         std::cout << i << ": ";
         function.m_getline(sInput);
@@ -147,6 +147,8 @@ void CDataExtraction::extractData()
             std::cout << "\n";
         }
     }
+
+    std::cout << counter << " matches.\n";
         
     unsigned int sndCounter = 0;
     for(auto it=l_inputs->begin(); it!=l_inputs->end(); it++)
@@ -156,8 +158,6 @@ void CDataExtraction::extractData()
         else if(sndCounter == 1 && counter >= 4)
             std::cout << (*it) << "\n\n";
         else if(sndCounter == 2 && counter >= 6)
-            std::cout << (*it) << "\n\n";
-        else if(sndCounter == 3 && counter >= 8)
             std::cout << (*it) << "\n\n";
         sndCounter++;   
     }
