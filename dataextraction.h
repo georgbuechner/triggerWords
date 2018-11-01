@@ -38,12 +38,13 @@ void CDataExtraction::addData()
         std::cout << i << ": ";
         function.m_getline(sInput);
         const char* chInput = sInput.c_str();
-        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI")));
-	sWritter.append("\n");
-	std::cout<<chInput<<std::endl;
+        char* chEncrypt = new char[20000];
+        vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI"), chEncrypt);
+        sWritter.append(chEncrypt);
+        delete []chEncrypt;
+	    sWritter.append("\n");
     }
 
-    std::cout<<"Swritter: "<<sWritter<<std::endl;
     //sWritter.append("\n1.");
 
     sInput="";
@@ -53,7 +54,11 @@ void CDataExtraction::addData()
         std::cout << i << ": ";
         function.m_getline(sInput);
         const char* chInput = sInput.c_str();
-        sWritter.append(vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI")));
+        char* chEncrypt = new char[20000];
+        vigenere.encryption(const_cast<char*>(chInput), const_cast<char*>("GAWASI"), chEncrypt);
+        sWritter.append("#\n");
+        sWritter.append(chEncrypt);
+        delete []chEncrypt;
         sWritter.append("\n\n");
     }
 
@@ -87,9 +92,34 @@ void CDataExtraction::extractData()
     {
         getline(read, sBuffer);
         const char* chBuffer = sBuffer.c_str();
-        l_triggerWords->push_back(vigenere.decryption(const_cast<char*>(chBuffer), const_cast<char*>("gawasi")));
+        char* chDecrypt = new char[20000];
+        vigenere.decryption(const_cast<char*>(chBuffer), const_cast<char*>("GAWASI"), chDecrypt);
+        std::string sDecrypt = chDecrypt;
+        l_triggerWords->push_back(sDecrypt);
+        delete []chDecrypt;
     }
 
+    std::list<std::string>* l_inputs = new std::list<std::string>;
+    while(!read.eof())
+    {
+        if(sBuffer.find("#") != std::string::npos)
+        {
+            std::string sNewInput;
+            while(sBuffer.find("#") != std::string::npos)
+            {
+                getline(read, sBuffer); 
+                const char* chBuffer = sBuffer.c_str();
+                char* chDecrypt = new char[20000];
+                vigenere.decryption(const_cast<char*>(chBuffer), const_cast<char*>("GAWASI"), chDecrypt);
+                sNewInput.append(chDecrypt);
+            }
+            l_inputs->push_back(sNewInput);
+        }
+                
+        else
+            getline(read, sBuffer);
+    }
+                
     std::cout << "Enter information to extract data of person: \n";
 
     std::list<std::string>* l_inputWords = new std::list<std::string>;
@@ -118,8 +148,20 @@ void CDataExtraction::extractData()
         }
     }
         
-    std::cout << "Matches: " << counter << "\n";
-
+    unsigned int sndCounter = 0;
+    for(auto it=l_inputs->begin(); it!=l_inputs->end(); it++)
+    {
+        if(sndCounter == 0 && counter >= 2)
+            std::cout << (*it) << "\n\n";
+        else if(sndCounter == 1 && counter >= 4)
+            std::cout << (*it) << "\n\n";
+        else if(sndCounter == 2 && counter >= 6)
+            std::cout << (*it) << "\n\n";
+        else if(sndCounter == 3 && counter >= 8)
+            std::cout << (*it) << "\n\n";
+        sndCounter++;   
+    }
+   
     delete l_triggerWords;
 }
         
