@@ -21,13 +21,13 @@ int main()
         function.m_getline(sInput); 
     
         //"E": extract data
-        if(function.compare(sInput.c_str(), "E") == true)
+        if(function.compare(sInput.c_str(), "D") == true)
             extractor.extractData();
         //"H": call help
         else if(function.compare(sInput.c_str(), "H") == true)
             extractor.help();
         //"C": close programm
-        else if(function.compare(sInput.c_str(), "C") == true)
+        else if(function.compare(sInput.c_str(), "P") == true)
             end=true;
         //Wrong input
         else

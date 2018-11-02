@@ -99,13 +99,19 @@ void CDataExtraction::extractData()
         if(sBuffer.find("j") != std::string::npos)
         {
             std::string sNewInput;
-            while(sBuffer.find("j") != std::string::npos)
+            while(!read.eof())
             {
                 getline(read, sBuffer); 
+
+                if(sBuffer[0] == 'j')
+                    break;
+
                 const char* chBuffer = sBuffer.c_str();
                 char* chDecrypt = new char[20000];
                 vigenere.decryption(const_cast<char*>(chBuffer), const_cast<char*>("GAWASI"), chDecrypt);
                 sNewInput.append(chDecrypt);
+                sNewInput.append("\n");
+
             }
             l_inputs->push_back(sNewInput);
         }
